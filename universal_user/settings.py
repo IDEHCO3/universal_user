@@ -101,14 +101,18 @@ WSGI_APPLICATION = 'universal_user.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+ip_sgbd = os.environ['IP_SGBD']
+database_name = os.environ['DATABASE_NAME']
+user_name_database = os.environ['USER_NAME_DATABASE']
+password_database = os.environ['PASSWORD_DATABASE']
 
 DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
-         'HOST': 'localhost',
-         'NAME': 'idehco3',
-         'USER': 'idehco3',
-         'PASSWORD': 'idehco3'
+         'HOST': ip_sgbd,
+         'NAME': database_name,
+         'USER': user_name_database,
+         'PASSWORD': password_database
      }
 }
 
@@ -131,3 +135,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
