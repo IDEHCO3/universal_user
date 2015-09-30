@@ -104,7 +104,7 @@ WSGI_APPLICATION = 'universal_user.wsgi.application'
 
 DATABASES = {
     'default': {
-         'ENGINE': 'django.contrib.gis.db.backends.postgis',
+         'ENGINE': 'django.db.backends.postgresql_psycopg2',
          'HOST': 'localhost',
          'NAME': 'idehco3',
          'USER': 'idehco3',
