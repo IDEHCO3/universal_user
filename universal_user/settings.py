@@ -98,6 +98,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'universal_user.wsgi.application'
 
+if not 'IP_SGBD' in os.environ:
+    os.environ['IP_SGBD'] = 'localhost'
+    os.environ['DATABASE_NAME'] = 'idehco3'
+    os.environ['USER_NAME_DATABASE'] = 'idehco3'
+    os.environ['PASSWORD_DATABASE'] = 'idehco3'
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
