@@ -22,6 +22,9 @@
                     <input type="submit" class="btn btn-primary form-control" value="{% trans 'Login' %}"/>
                 </div>
                 <div class="form-group">
+                    <a href="{% url 'userPages:create' %}" class="btn btn-primary form-control" >{% trans 'Create an account' %}</a>
+                </div>
+                <div class="form-group">
                     {$ message $}
                 </div>
             </fielset>
