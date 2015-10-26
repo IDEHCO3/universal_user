@@ -49,6 +49,7 @@ INSTALLED_APPS = (
     'rest_framework_jwt',
     'users',
     'authentication',
+    'create_user',
 )
 
 JWT_AUTH = {
