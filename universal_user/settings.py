@@ -69,10 +69,11 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+
     #OLD
     #'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.common.CommonMiddleware',
@@ -108,7 +109,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'universal_user.wsgi.application'
 
 if not 'IP_SGBD' in os.environ:
-    os.environ['IP_SGBD'] = '172.17.0.1'
+    os.environ['IP_SGBD'] = '127.0.0.1'
     os.environ['DATABASE_NAME'] = 'idehco3'
     os.environ['USER_NAME_DATABASE'] = 'idehco3'
     os.environ['PASSWORD_DATABASE'] = 'idehco3'
