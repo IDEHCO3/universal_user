@@ -14,6 +14,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 import os
 import datetime
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -29,6 +30,7 @@ STATICFILES_DIRS = [
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'mwn6)v29l3r!@&4-8ohnx03v^h0-*x&2=qz!1w#@qj9d4=4sm9'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -58,6 +60,7 @@ JWT_AUTH = {
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+    'JWT_PAYLOAD_HANDLER': 'authentication.utils.new_payload_handler',
 }
 
 REST_FRAMEWORK = {
@@ -109,7 +112,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'universal_user.wsgi.application'
 
 if not 'IP_SGBD' in os.environ:
-    os.environ['IP_SGBD'] = '127.0.0.1'
+    os.environ['IP_SGBD'] = '172.17.0.2'
     os.environ['DATABASE_NAME'] = 'idehco3'
     os.environ['USER_NAME_DATABASE'] = 'idehco3'
     os.environ['PASSWORD_DATABASE'] = 'idehco3'
