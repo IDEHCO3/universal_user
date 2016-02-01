@@ -1,6 +1,6 @@
-from rest_framework_jwt.utils import jwt_payload_handler
+from rest_framework_jwt import utils
 
 def new_payload_handler(user):
-    payload = jwt_payload_handler(user)
-    payload['uuid'] = user.user_uuid.__str__()
+    payload = utils.jwt_payload_handler(user)
+    payload['uuid'] = str(user.user_uuid)
     return payload

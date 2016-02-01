@@ -9,7 +9,7 @@
         <form  ng-submit="submit()">
             <fielset>
                 {% csrf_token %}
-                <input class="hidden" type="text" name="next" ng-model="next" value="/authetication"/>
+                <input class="hidden" type="text" name="next" ng-model="next" value="/authentication"/>
                 <div class="form-group">
                     <label>{% trans 'Login' %}</label>
                     <input type="text" class="form-control" ng-model="user.username" name="username"/>

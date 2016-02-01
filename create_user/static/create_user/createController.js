@@ -11,7 +11,8 @@
             last_name: "",
             username: "",
             email: "",
-            password: ""
+            password: "",
+            retype_password: ""
         };
 
         $scope.error = "";
@@ -19,6 +20,7 @@
         $scope.success = false;
 
         $scope.submit = function(){
+
             $scope.error = "";
             var url = '/users/';
             $http.post(url, $scope.user)

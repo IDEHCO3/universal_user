@@ -10,7 +10,7 @@
     </div>
     <div class="row" ng-app="UserApp">
         <div class="col-md-5 col-md-offset-2" ng-controller="UserController as userCtrl">
-            <form ng-if="!success">
+            <form ng-if="!success" name="aform">
                 <div class="form-group">
                     <label>{% trans 'First Name' %}</label>
                     <input type="text" class="form-control" ng-model="user.first_name" placeholder="{% trans 'first name' %}"/>
@@ -18,26 +18,42 @@
                 </div>
                 <div class="form-group">
                     <label>{% trans 'Last Name' %}</label>
-                    <input type="text" class="form-control" ng-model="user.last_name" placeholder="{% trans 'last name' %}"/>
+                    <input type="text" name="lastName"class="form-control" ng-model="user.last_name" placeholder="{% trans 'last name' %}"/>
                     <p class="text-danger" ng-repeat="e in error.last_name">{$ e $}</p>
                 </div>
                 <div class="form-group">
                     <label>{% trans 'User Name' %}</label>
-                    <input type="text" class="form-control" ng-model="user.username" placeholder="{% trans 'username' %}"/>
-                    <p class="text-danger" ng-repeat="e in error.username">{$ e $}</p>
+                    <input type="text" name="username" class="form-control" ng-model="user.username" placeholder="{% trans 'username' %}" required />
+                    <span  style="color:red" ng-show="aform.username.$pristine">
+                        <span  ng-show="aform.username.$error.required">{% trans 'User name is required' %}</span>
+                    </span>
                 </div>
                 <div class="form-group">
                     <label>{% trans 'Email' %}</label>
-                    <input type="text" class="form-control" ng-model="user.email" placeholder="{% trans 'email' %}"/>
-                    <p class="text-danger" ng-repeat="e in error.email">{$ e $}</p>
+                    <input type="email" name="email" class="form-control" ng-model="user.email"  placeholder="{% trans 'email' %}" required>
+                    <span  style="color:red" ng-show="aform.email.$dirty && aform.email.$invalid">
+                        <span  ng-show="aform.email.$error.required">{% trans 'Email is required' %}</span>
+                        <span  ng-show="aform.email.$error.email">{% trans 'Invalid email address.'%}</span>
+                    </span>
+
                 </div>
                 <div class="form-group">
                     <label>{% trans 'Password' %}</label>
-                    <input type="text" class="form-control" ng-model="user.password" placeholder="{% trans 'password' %}"/>
+                    <input type="password" name="password" class="form-control" ng-model="user.password" placeholder="{% trans 'password' %}"/>
                     <p class="text-danger" ng-repeat="e in error.password">{$ e $}</p>
                 </div>
                 <div class="form-group">
-                    <input type="sumit" ng-click="submit()" class="btn btn-default form-control" value="{% trans 'Sign up' %}"/>
+                    <label>{% trans 'Retype password' %}</label>
+                    <input type="password" name="retype_password" class="form-control" ng-model="user.retype_password" placeholder="{% trans 'Retype password' %}"/>
+                    <span  style="color:red" ng-show="aform.retype_password.$pristine">
+                        <span  ng-show="aform.retype_password.$error.required">{% trans 'The passwords are not equal' %}</span>
+
+                    </span>
+                </div>
+                <div class="form-group">
+                    <input type="sumit" ng-click="submit()"
+                           ng-disabled="aform.username.$pristine || aform.email.$dirty && aform.email.$invalid"
+                           class="btn btn-default form-control" value="{% trans 'Sign up' %}"/>
                 </div>
             </form>
             <div ng-if="success">
