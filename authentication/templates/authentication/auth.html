@@ -1,5 +1,4 @@
 {% extends 'site_base.html' %}
-{% load auth_tag %}
 {% load staticfiles %}
 {% load i18n %}
 {% block body %}
@@ -21,7 +20,7 @@
     <script src="{% static 'angular/angular.min.js' %}"></script>
 
     <script>
-        var url_authetication_token = '{% url 'authentication:token' %}';
+        var url_authetication_token = '{% url 'authentication:signin' %}';
         var url_authetication_me = '{% url 'authentication:me' %}';
         var url_authetication_index = '{% url 'authentication:index' %}'
         var url_next = '{{ next }}';

@@ -1,5 +1,4 @@
 {% extends 'site_base.html' %}
-{% load auth_tag %}
 {% load staticfiles %}
 {% load i18n %}
 {% block body %}
@@ -58,12 +57,15 @@
             </form>
             <div ng-if="success">
                 <h2 class="text-success">{% trans 'Account created with success!' %}</h2>
-                <a href="/authentication/" class="btn btn-default">{% trans 'Sign in' %}</a>
+                <a href="{% url 'authentication:index' %}" class="btn btn-default">{% trans 'Sign in' %}</a>
             </div>
         </div>
     </div>
 {% endblock body %}
 {% block scripts %}
     <script src="{% static 'angular/angular.min.js' %}"></script>
+    <script>
+        var url_users = "{% url 'user:create' %}";
+    </script>
     <script src="{% static 'create_user/createController.js' %}"></script>
 {% endblock scripts %}

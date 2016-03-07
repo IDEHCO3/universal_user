@@ -22,7 +22,7 @@
         $scope.submit = function(){
 
             $scope.error = "";
-            var url = '/users/';
+            var url = url_users;
             $http.post(url, $scope.user)
                 .success(function(data){
                     $scope.user = data;
