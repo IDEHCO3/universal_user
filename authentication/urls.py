@@ -11,8 +11,8 @@ urlpatterns = patterns('',
     url(r'^signin', 'rest_framework_jwt.views.obtain_jwt_token', name='signin'),
     url(r'^token-refresh', 'rest_framework_jwt.views.refresh_jwt_token', name='tokenRefresh'),
     url(r'^token-verify', 'rest_framework_jwt.views.verify_jwt_token'),
-    url(r'^me$', WhoAmI.as_view(), name='me'),
-    url(r'^index$', authetication, name='index'),
+    url(r'^me', WhoAmI.as_view(), name='me'),
+    url(r'^index', authetication, name='index'),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)
