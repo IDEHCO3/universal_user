@@ -3,5 +3,6 @@ from .views import *
 
 urlpatterns = patterns('',
     url(r'^$', UserCreate.as_view(), name='create'),
+    url(r'^facebook/', UserFacebook.as_view(), name='facebook'),
     url(r'^(?P<pk>\d+)/$', UserDetail.as_view(), name='detail')
 )
