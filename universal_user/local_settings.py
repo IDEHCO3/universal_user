@@ -1,5 +1,5 @@
 
 Facebook = {
-    "app_id": "1245",
-    "app_secret": "abcd12345",
+    "app_id": "",
+    "app_secret": "",
 }

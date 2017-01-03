@@ -7,6 +7,7 @@ from .models import User
 from .serializers import UserSerializer, UserCreateSerializer
 from .permissions import IsOwner
 from universal_user.settings import FB
+from rest_framework_jwt.settings import api_settings
 
 import json
 import requests
@@ -74,38 +75,45 @@ class FacebookControl:
 
 class UserFacebook(APIView):
 
-    def isthereUser(self, userfb):
+    def __init__(self, *args, **kwargs):
+        APIView.__init__(self, *args, **kwargs)
+        self.jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+        self.jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+
+    def getUser(self, userfb):
         try:
             user = User.objects.get(email=userfb['email'])
         except User.DoesNotExist:
             user = None
-        return user is not None
+        return user
 
     def createUser(self, userfb, userAccessToken):
-        user = User(email=userfb['email'], first_name=userfb['name'], username=userfb['email'], password=userAccessToken)
+        if userfb is None:
+            return None
+        user = User(email=userfb['email'], first_name=userfb['name'], username=userfb['email'], password=userAccessToken[:100])
         user.save()
-        print "oleh"
-
-    def getToken(self, userfb, userAccessToken):
-        try:
-            user = User.objects.get(email=userfb['email'])
-        except User.DoesNotExist:
-            user = None
-
-        if user is not None:
-            user.password = userAccessToken
-            user.save()
-
         return user
+
+    def getToken(self, user):
+        token = None
+        if user is not None:
+            payload = self.jwt_payload_handler(user)
+            token = self.jwt_encode_handler(payload)
+        return token
 
     def post(self, request, *args, **kwargs):
         userAccessToken = request.data['accessToken']
         fb = FacebookControl()
         userfb = fb.getUserFB(userAccessToken)
-        # if not self.isthereUser(userfb):
-        #     self.createUser(userfb, userAccessToken)
-        # token = self.getToken(userfb)
+        user = self.getUser(userfb)
+        if user is None:
+             user = self.createUser(userfb, userAccessToken)
+        else:
+            user.password = userAccessToken[:100]
+            user.save()
 
-        if userfb is not None:
-            return Response(userfb, status=200)
+        token = self.getToken(user)
+
+        if token is not None:
+            return Response({"token": token}, status=200)
         return Response({"error": "It wasn't possible to load user data from facebook"}, status=404)

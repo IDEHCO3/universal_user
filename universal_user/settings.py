@@ -115,7 +115,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'universal_user.wsgi.application'
 
 if not 'IP_SGBD' in os.environ:
-    os.environ['IP_SGBD'] = 'localhost'
+    os.environ['IP_SGBD'] = '172.17.0.2'
 
 if not 'DATABASE_NAME' in os.environ:
     os.environ['DATABASE_NAME'] = 'idehco3'
