@@ -2,68 +2,6 @@
 {% load staticfiles %}
 {% load i18n %}
 {% block body %}
-    <script>
-    function testAPI(status) {
-        console.log('Welcome!  Fetching your information.... ');
-        FB.api('/me', function(response) {
-          console.log('Successful login for: ' + response.name,response);
-          document.getElementById('status').innerHTML =
-            'Thanks for logging in, ' + response.name + '!';
-        });
-
-        $.post( "/idehco3/universaluser/users/facebook/", {"accessToken": status.accessToken }, function(data) {
-            console.log(data);
-            alert( "success" );
-          })
-          .done(function(data) {
-              console.log(data);
-            alert( "second success" );
-          })
-          .fail(function() {
-            alert( "error" );
-          })
-          .always(function() {
-            alert( "finished" );
-          });
-      }
-
-      function statusChangeCallback(response) {
-        console.log('statusChangeCallback');
-        console.log(response);
-        console.log("statuuuuuuuuuuus ", response);
-        if (response.status === 'connected') {
-          testAPI(response.authResponse);
-        } else if (response.status === 'not_authorized') {
-          document.getElementById('status').innerHTML = 'Please log ' +
-            'into this app.';
-        } else {
-          document.getElementById('status').innerHTML = 'Please log ' +
-            'into Facebook.';
-        }
-      }
-
-      function checkLoginState () {
-        FB.getLoginStatus(function(response) {
-          statusChangeCallback(response);
-        });
-      }
-
-        window.fbAsyncInit = function() {
-            FB.init({
-                appId      : '1071687446243206',
-                xfbml      : true,
-                version    : 'v2.8'
-            });
-        };
-
-        (function(d, s, id){
-             var js, fjs = d.getElementsByTagName(s)[0];
-             if (d.getElementById(id)) {return;}
-             js = d.createElement(s); js.id = id;
-             js.src = "//connect.facebook.net/en_US/sdk.js";
-             fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
     <div ng-app="UserApp">
         <div ng-controller="UserCtrl">
             <div class="row" ng-if="isAutheticated()">
@@ -84,7 +22,8 @@
     <script>
         var url_authetication_token = '{% url 'authentication:signin' %}';
         var url_authetication_me = '{% url 'authentication:me' %}';
-        var url_authetication_index = '{% url 'authentication:index' %}'
+        var url_authetication_index = '{% url 'authentication:index' %}';
+        var url_fb_token ='{% url 'user:facebook' %}';
         var url_next = '{{ next }}';
     </script>
     <script src="{% static 'authentication/user_controller.js' %}"></script>
