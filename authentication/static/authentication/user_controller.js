@@ -11,6 +11,7 @@
             $http.post(url_fb_token, {accessToken: authResponse.accessToken })
                 .success(function(data){
                     $window.sessionStorage.token = data['token'];
+                    $window.location.reload();
                 })
                 .error(function(data){
                     console.log("Error: token wasn't taken!");
@@ -32,9 +33,11 @@
 
         return {
             loadToken: function(){
-                FB.getLoginStatus(function(response) {
-                    that.setToken(response);
-                });
+                if ($window.sessionStorage.token == null) {
+                    FB.getLoginStatus(function (response) {
+                        that.setToken(response);
+                    });
+                }
             },
             watchLoginChange: function() {
 
@@ -44,9 +47,14 @@
 
             },
             logout: function(){
-                FB.logout(function(response) {
-                    // user is now logged out
-                    console.log("logged out", response);
+                FB.getLoginStatus(function(response) {
+                    if (response && response.status === 'connected') {
+                        FB.logout(function(response) {
+                            FB.Auth.setAuthResponse(null, 'unknown');
+                            console.log("logged out",response);
+                            $window.location.reload();
+                        });
+                    }
                 });
             }
         }
@@ -107,7 +115,6 @@
         $scope.user = {username: '', password: '', name: ''};
         $scope.message = '';
         $scope.next = url_next;
-        //$scope.loggedin = false;
 
         $scope.loadUserData = function() {
             if ($window.sessionStorage.token != null) {
@@ -118,6 +125,8 @@
                     })
                     .error(function (data) {
                         console.log(data);
+                        delete $window.sessionStorage.token;
+                        $window.location.reload();
                     });
             }
         };
@@ -128,7 +137,6 @@
                     $window.sessionStorage.token = data.token;
                     $scope.message = 'Welcome';
                     $window.location = $scope.next;
-                    //$scope.loggedin = true;
                     console.log(data);
                 })
                 .error(function (data, status, headers, config) {
@@ -144,28 +152,17 @@
         $scope.logout = function(){
             if($window.sessionStorage.token != null){
                 delete $window.sessionStorage.token;
-                fbAuth.logout();
                 $scope.user = {username: '', password: '', name: ''};
                 $scope.message = '';
-                //$scope.loggedin = false;
+                fbAuth.logout();
+                $window.location.reload();
             }
         };
 
         $scope.isAutheticated = function(){
-            return $window.sessionStorage.token != null;
+            return $window.sessionStorage.token != null && $scope.user.name != '';
         };
 
-        //$scope.$watch('loggedin',function(newVal,oldVal){
-        //    if(newVal != oldVal && newVal){
-        //         $scope.loadUserData();
-        //    }
-        //});
-
-        //$scope.$watch();
-
-        //if ($window.sessionStorage.token != null) {
-        //    $scope.loggedin = true;
-        //}
         $scope.loadUserData();
     }]);
 })();
