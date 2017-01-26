@@ -17,8 +17,8 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^idehco3/universaluser/admin/', include(admin.site.urls)),
-    url(r'^idehco3/universaluser/authentication/', include('authentication.urls', namespace='authentication')),
-    url(r'^idehco3/universaluser/users/', include('create_user.urls', namespace='userPages')),
-    url(r'^idehco3/universaluser/users/', include('users.urls', namespace='user'))
+    url(r'^universaluser/admin/', include(admin.site.urls)),
+    url(r'^universaluser/authentication/', include('authentication.urls', namespace='authentication')),
+    url(r'^universaluser/users/', include('create_user.urls', namespace='userPages')),
+    url(r'^universaluser/users/', include('users.urls', namespace='user'))
 ]

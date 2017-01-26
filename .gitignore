@@ -12,3 +12,9 @@
 
 #static
 static_root/*
+
+#local settings
+universal_use/local_settings.py
+
+#nginx
+nginx/*
