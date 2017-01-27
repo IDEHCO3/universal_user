@@ -37,7 +37,7 @@ SECRET_KEY = 'mwn6)v29l3r!@&4-8ohnx03v^h0-*x&2=qz!1w#@qj9d4=4sm9'
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -119,6 +119,9 @@ WSGI_APPLICATION = 'universal_user.wsgi.application'
 if not 'IP_SGBD' in os.environ:
     os.environ['IP_SGBD'] = '172.17.0.2'
 
+if not 'PORT_SGBD' in os.environ:
+    os.environ['PORT_SGBD'] = '5432'
+
 if not 'DATABASE_NAME' in os.environ:
     os.environ['DATABASE_NAME'] = 'idehco3'
 
@@ -131,6 +134,7 @@ if not 'PASSWORD_DATABASE' in os.environ:
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 ip_sgbd = os.environ['IP_SGBD']
+port_sgbd = os.environ['PORT_SGBD']
 database_name = os.environ['DATABASE_NAME']
 user_name_database = os.environ['USER_NAME_DATABASE']
 password_database = os.environ['PASSWORD_DATABASE']
@@ -139,6 +143,7 @@ DATABASES = {
     'default': {
          'ENGINE': 'django.db.backends.postgresql_psycopg2',
          'HOST': ip_sgbd,
+         'PORT': port_sgbd,
          'NAME': database_name,
          'USER': user_name_database,
          'PASSWORD': password_database
