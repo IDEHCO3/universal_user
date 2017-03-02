@@ -61,7 +61,7 @@ INSTALLED_APPS = (
 
 JWT_AUTH = {
     'JWT_VERIFY': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=300),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=6000),
     'JWT_ALLOW_REFRESH': True,
     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
     'JWT_PAYLOAD_HANDLER': 'authentication.utils.new_payload_handler',
