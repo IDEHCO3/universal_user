@@ -12,9 +12,9 @@ from rest_framework_jwt.settings import api_settings
 import json
 import requests
 
-class UserCreate(generics.CreateAPIView):
+class UserList(generics.ListCreateAPIView):
+    queryset = User.objects.all()
     serializer_class = UserCreateSerializer
-
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
@@ -22,6 +22,13 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
 
     permission_classes = (permissions.IsAuthenticated, IsOwner,)
     authentication_classes = (JSONWebTokenAuthentication, )
+
+
+class UserDetailUUID(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserCreateSerializer
+    lookup_field = 'user_uuid'
+    lookup_url_kwarg = 'user_uuid'
 
 class FacebookControl:
 
