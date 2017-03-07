@@ -5,75 +5,15 @@
             $interpolateProvider.endSymbol('$}');
         });
 
-    app.factory('fbAuth', function($rootScope, $http, $window){
-        var that = this;
-        this.getToken = function(authResponse){
-            $http.post(url_fb_token, {accessToken: authResponse.accessToken })
-                .success(function(data){
-                    $window.sessionStorage.token = data['token'];
-                    $window.location.reload();
-                })
-                .error(function(data){
-                    console.log("Error: token wasn't taken!");
-                });
-        };
 
-        this.setToken = function(response){
-            if (response.status === 'connected') {
-                console.log("logged!!!!!!!!!!!!!");
-                that.getToken(response.authResponse);
-            }
-            else {
-                console.log("not logged!!!!!!!!!!!!!");
-                if($window.sessionStorage.token != null) {
-                    delete $window.sessionStorage.token;
-                }
-            }
-        };
-
-        return {
-            loadToken: function(){
-                if ($window.sessionStorage.token == null) {
-                    FB.getLoginStatus(function (response) {
-                        that.setToken(response);
-                    });
-                }
-            },
-            watchLoginChange: function() {
-
-                FB.Event.subscribe('auth.authResponseChange', function(response) {
-                    that.setToken(response);
-                });
-
-            },
-            logout: function(){
-                FB.getLoginStatus(function(response) {
-                    if (response && response.status === 'connected') {
-                        FB.logout(function(response) {
-                            FB.Auth.setAuthResponse(null, 'unknown');
-                            console.log("logged out",response);
-                            $window.location.reload();
-                        });
-                    }
-                });
-            }
-        }
-    });
-
-    app.run(['$rootScope', '$window', 'fbAuth', function($rootScope, $window, fbAuth) {
-
-        $rootScope.fbuser = {};
+    app.run(['$rootScope', '$window', function($rootScope, $window) {
 
         $window.fbAsyncInit = function() {
-
             FB.init({
                 appId      : '1071687446243206',
                 xfbml      : true,
                 version    : 'v2.8'
             });
-
-            fbAuth.loadToken();
-            fbAuth.watchLoginChange();
         };
 
         (function(d){
@@ -111,10 +51,23 @@
         $httpProvider.interceptors.push('authInterceptor');
     });
 
-    app.controller('UserCtrl', ['$scope', '$http', '$window', 'fbAuth', function ($scope, $http, $window, fbAuth) {
+    app.controller('UserCtrl', ['$scope', '$http', '$window', function ($scope, $http, $window) {
         $scope.user = {username: '', password: '', name: ''};
         $scope.message = '';
         $scope.next = url_next;
+
+        var that = this;
+
+        this.getToken = function(authResponse){
+            $http.post(url_fb_token, {accessToken: authResponse.accessToken })
+                .success(function(data){
+                    $window.sessionStorage.token = data['token'];
+                    $window.location = $scope.next;
+                })
+                .error(function(data){
+                    console.log("Error: token wasn't taken!");
+                });
+        };
 
         $scope.loadUserData = function() {
             if ($window.sessionStorage.token != null) {
@@ -147,6 +100,28 @@
                     // Handle login errors here
                     $scope.message = 'Error: Invalid user or password';
                 });
+        };
+
+        $scope.loginFacebook = function(){
+            console.log("login with facebook!");
+            FB.getLoginStatus(function(response) {
+                if (response.status === 'connected') {
+                    console.log("logged on facebook!");
+                    that.getToken(response.authResponse);
+                }
+                else{
+                    console.log("Not logged on facebook!");
+                    FB.login(function(response){
+                        if (response.status === 'connected') {
+                            console.log("logged on facebook!");
+                            that.getToken(response.authResponse);
+                        }
+                        else {
+                            console.log("Not logged on facebook!");
+                        }
+                    });
+                }
+            }, true);
         };
 
         $scope.logout = function(){
