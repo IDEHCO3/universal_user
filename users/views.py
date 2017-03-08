@@ -8,6 +8,7 @@ from .serializers import UserSerializer, UserCreateSerializer
 from .permissions import IsOwner
 from universal_user.settings import FB
 from rest_framework_jwt.settings import api_settings
+from django.contrib.auth.hashers import make_password
 
 import json
 import requests
@@ -97,7 +98,7 @@ class UserFacebook(APIView):
     def createUser(self, userfb, userAccessToken):
         if userfb is None:
             return None
-        user = User(email=userfb['email'], first_name=userfb['name'], username=userfb['email'], password=userAccessToken[:100])
+        user = User(email=userfb['email'], first_name=userfb['name'], username=userfb['email'], password=make_password(userAccessToken[:100]))
         user.save()
         return user
 
@@ -116,7 +117,7 @@ class UserFacebook(APIView):
         if user is None:
              user = self.createUser(userfb, userAccessToken)
         else:
-            user.password = userAccessToken[:100]
+            user.password = make_password(userAccessToken[:100])
             user.save()
 
         token = self.getToken(user)
