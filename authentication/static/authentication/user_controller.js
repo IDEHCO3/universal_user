@@ -103,25 +103,15 @@
         };
 
         $scope.loginFacebook = function(){
-            console.log("login with facebook!");
-            FB.getLoginStatus(function(response) {
+            FB.login(function(response){
                 if (response.status === 'connected') {
                     console.log("logged on facebook!");
                     that.getToken(response.authResponse);
                 }
-                else{
+                else {
                     console.log("Not logged on facebook!");
-                    FB.login(function(response){
-                        if (response.status === 'connected') {
-                            console.log("logged on facebook!");
-                            that.getToken(response.authResponse);
-                        }
-                        else {
-                            console.log("Not logged on facebook!");
-                        }
-                    });
                 }
-            }, true);
+            });
         };
 
         $scope.logout = function(){
@@ -129,7 +119,6 @@
                 delete $window.sessionStorage.token;
                 $scope.user = {username: '', password: '', name: ''};
                 $scope.message = '';
-                fbAuth.logout();
                 $window.location.reload();
             }
         };
