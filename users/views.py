@@ -98,7 +98,8 @@ class UserFacebook(APIView):
     def createUser(self, userfb, userAccessToken):
         if userfb is None:
             return None
-        user = User(email=userfb['email'], first_name=userfb['name'], username=userfb['email'], password=make_password(userAccessToken[:100]))
+        names = userfb['name'].split(' ')
+        user = User(email=userfb['email'], first_name=names[0], last_name=' '.join(names[1:]), username=userfb['email'], password=make_password(userAccessToken[:100]))
         user.save()
         return user
 
