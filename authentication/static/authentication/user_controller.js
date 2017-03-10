@@ -59,7 +59,7 @@
         var that = this;
 
         this.getToken = function(authResponse){
-            $http.post(url_fb_token, {accessToken: authResponse.accessToken })
+            $http.post(url_fb_token, {accessToken: authResponse.accessToken, userID: authResponse.userID })
                 .success(function(data){
                     $window.sessionStorage.token = data['token'];
                     $window.location = $scope.next;
@@ -111,6 +111,9 @@
                 else {
                     console.log("Not logged on facebook!");
                 }
+            },{
+                scope: 'email',
+                return_scopes: true
             });
         };
 

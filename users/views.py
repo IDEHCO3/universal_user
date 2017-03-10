@@ -2,6 +2,7 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .models import User
 from .serializers import UserSerializer, UserCreateSerializer
@@ -12,6 +13,7 @@ from django.contrib.auth.hashers import make_password
 
 import json
 import requests
+import random
 
 class UserList(generics.ListCreateAPIView):
     queryset = User.objects.all()
@@ -33,11 +35,11 @@ class UserDetailUUID(generics.RetrieveAPIView):
 
 class FacebookControl:
 
-    redirect_uri = "http://localhost"
+    redirect_uri = "http://idehco4.tk/universaluser"
     fb_host = "https://graph.facebook.com/"
     uri_app_access_token = "v2.8/oauth/access_token?client_id={app-id}&redirect_uri={redirect-uri}&client_secret={app-secret}&grant_type=client_credentials"
     uri_inspect_token = "debug_token?input_token={token-to-inspect}&access_token={app-token}"
-    uri_user_data = "/v2.8/{user-id}?fields=name,id,email,friends&access_token={app-token}"
+    uri_user_data = "v2.8/{user-id}?fields=name,id,email,friends&access_token={app-token}"
 
     def __init__(self):
         self.app_id = FB['app_id']
@@ -88,18 +90,25 @@ class UserFacebook(APIView):
         self.jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
         self.jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
+    def get_password(self):
+        password = ''.join([random.choice('0123456789ABCDEF') for i in range(15)])
+        return make_password(password)
+
     def getUser(self, userfb):
         try:
-            user = User.objects.get(email=userfb['email'])
+            if userfb is not None:
+                user = User.objects.get(email=userfb.get('email'))
+            else:
+                user = None
         except User.DoesNotExist:
             user = None
         return user
 
-    def createUser(self, userfb, userAccessToken):
+    def createUser(self, userfb):
         if userfb is None:
             return None
         names = userfb['name'].split(' ')
-        user = User(email=userfb['email'], first_name=names[0], last_name=' '.join(names[1:]), username=userfb['email'], password=make_password(userAccessToken[:100]))
+        user = User(email=userfb['email'], first_name=names[0], last_name=' '.join(names[1:]), username=userfb['email'], password=self.get_password())
         user.save()
         return user
 
@@ -111,18 +120,16 @@ class UserFacebook(APIView):
         return token
 
     def post(self, request, *args, **kwargs):
-        userAccessToken = request.data['accessToken']
+        fb_id = request.data.get('userID')
         fb = FacebookControl()
-        userfb = fb.getUserFB(userAccessToken)
+
+        userfb = fb.getUserData(fb_id)
         user = self.getUser(userfb)
         if user is None:
-             user = self.createUser(userfb, userAccessToken)
-        else:
-            user.password = make_password(userAccessToken[:100])
-            user.save()
+             user = self.createUser(userfb)
 
         token = self.getToken(user)
 
         if token is not None:
-            return Response({"token": token}, status=200)
-        return Response({"error": "It wasn't possible to load user data from facebook"}, status=404)
+            return Response({"token": token}, status=status.HTTP_200_OK)
+        return Response({"error": "It wasn't possible to load user data from facebook"}, status=status.HTTP_404_NOT_FOUND)
