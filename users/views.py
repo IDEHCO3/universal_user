@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 from .models import User
 from .serializers import UserSerializer, UserCreateSerializer
-from .permissions import IsOwner
+from .permissions import IsOwnerOrReadOnly
 from universal_user.settings import FB
 from rest_framework_jwt.settings import api_settings
 from django.contrib.auth.hashers import make_password
@@ -23,7 +23,7 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    permission_classes = (permissions.IsAuthenticated, IsOwner,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
     authentication_classes = (JSONWebTokenAuthentication, )
 
 
